@@ -29,6 +29,43 @@ module.exports = function(env) {
             "react-hot",
             "babel-loader"
           ]
+        },
+        {
+          "test": /\.json$/,
+          "exclude": /node_modules/,
+          "loaders": [
+            "json-loader"
+          ]
+        },
+        {
+          "test": /\.svg$/,
+          "exclude": /node_modules/,
+          "loaders": [
+            "svg-inline"
+          ]
+        },
+        {
+          "test": /\.(png|gif|jpe?g)$/,
+          "exclude": /node_modules/,
+          "loaders": [
+            "image-webpack"
+          ]
+        },
+        {
+          "test": /\.styl$/,
+          "exclude": /node_modules/,
+          "loaders": [
+            "style-loader",
+            "stylus-loader"
+          ]
+        },
+        {
+          "test": /\.css$/,
+          "exclude": /node_modules/,
+          "loaders": [
+            "style-loader",
+            "css-loader"
+          ]
         }
       ]
     },
