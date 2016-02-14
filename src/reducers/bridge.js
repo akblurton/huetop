@@ -1,14 +1,14 @@
 import { combineReducers } from "redux";
 import {
-  FOUND_HUBS,
-  SELECT_HUB,
-  CANNOT_FIND_HUBS,
-  FETCH_HUBS
+  FOUND_BRIDGES,
+  SELECT_BRIDGE,
+  CANNOT_FIND_BRIDGES,
+  FETCH_BRIDGES
 } from "actions";
 
 function list(state = [], action) {
   switch(action.type) {
-  case FOUND_HUBS:
+  case FOUND_BRIDGES:
     return action.list.map(hub => {
       let { id, internalipaddress: ip } = hub;
       return {
@@ -23,7 +23,7 @@ function list(state = [], action) {
 
 function current(state = null, action) {
   switch(action.type) {
-  case SELECT_HUB: {
+  case SELECT_BRIDGE: {
     let { id, internalipaddress: ip } = action.hub;
     return {
       id,
@@ -37,10 +37,10 @@ function current(state = null, action) {
 
 function isLoading(state = false, action) {
   switch(action.type) {
-  case FETCH_HUBS:
+  case FETCH_BRIDGES:
     return true;
-  case FOUND_HUBS:
-  case CANNOT_FIND_HUBS:
+  case FOUND_BRIDGES:
+  case CANNOT_FIND_BRIDGES:
     return false;
   default:
     return state;
@@ -49,11 +49,11 @@ function isLoading(state = false, action) {
 
 function error(state = null, action) {
   switch(action.type) {
-  case CANNOT_FIND_HUBS:
+  case CANNOT_FIND_BRIDGES:
     return action.error;
-  case SELECT_HUB:
-  case FOUND_HUBS:
-  case FETCH_HUBS:
+  case SELECT_BRIDGE:
+  case FOUND_BRIDGES:
+  case FETCH_BRIDGES:
     return null;
   default:
     return state;

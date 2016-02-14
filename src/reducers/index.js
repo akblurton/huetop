@@ -1,6 +1,6 @@
 import { combineReducers } from "redux";
-import hub from "./hubs";
+import bridge from "./bridge";
 
 export default combineReducers({
-  hub
+  bridge
 });
