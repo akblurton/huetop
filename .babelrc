@@ -4,7 +4,6 @@
     "transform-function-bind",
     "transform-class-properties",
     "transform-decorators-legacy",
-    "transform-strict-mode",
-    "transform-runtime"
+    "transform-strict-mode"
   ]
 }
