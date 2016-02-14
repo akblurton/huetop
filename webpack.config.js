@@ -1,4 +1,4 @@
-const AVAILABLE_ENV = ["dev", "stage", "prod"];
+const AVAILABLE_ENV = ["dev", "stage", "prod", "test"];
 const DEFAULT_ENV = "dev";
 
 module.exports = function(env) {
@@ -86,7 +86,7 @@ module.exports = function(env) {
   env = AVAILABLE_ENV.indexOf(env) > -1 ? env : DEFAULT_ENV;
   var envSettings = {}, file = `./webpack.${env}.config.js`;
   try {
-    envSettings = require(file);
+    envSettings = require(file)(BASE);
   } catch(e) {
     console.warn(`Could not load "${file}"`);
   }

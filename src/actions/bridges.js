@@ -1,13 +1,3 @@
-import fetch from "isomorphic-fetch";
-
-export const SELECT_BRIDGE = "SELECT_BRIDGE";
-export function selectBridge(hub) {
-  return {
-    type: SELECT_BRIDGE,
-    hub
-  };
-}
-
 export const FOUND_BRIDGES = "FOUND_BRIDGES";
 export function foundBridges(list) {
   return {

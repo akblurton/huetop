@@ -67,5 +67,10 @@
     "react/self-closing-comp": 1,
     "react/sort-comp": 0,
     "react/wrap-multilines": 1
+  },
+  "globals": {
+    "describe": true,
+    "it": true,
+    "expect": true
   }
 }
