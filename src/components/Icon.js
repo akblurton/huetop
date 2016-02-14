@@ -110,7 +110,8 @@ export default class Icon extends React.Component {
 
   render() {
     return (
-      <div className="Icon"
+      <div
+        className="Icon"
         dangerouslySetInnerHTML={this.svg()}
         ref={ref => this._svg = ref}
       ></div>
