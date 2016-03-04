@@ -71,6 +71,7 @@
   "globals": {
     "describe": true,
     "it": true,
-    "expect": true
+    "expect": true,
+    "assert": true
   }
 }
