@@ -5,12 +5,12 @@ import { UNAUTHORIZED_USER } from "services/hue";
 
 describe("Hue fetch", () => {
   it("should handle HTTP status codes", () => {
-    FetchMock.mock("test1", 200);
+    FetchMock.mock("test1", {});
     FetchMock.mock("test2", 500);
     FetchMock.mock("test3", 400);
 
     return Promise.all([
-      fetch("test1").should.be.fufilled,
+      fetch("test1").should.not.be.rejected,
       fetch("test2").should.be.rejected,
       fetch("test3").should.be.rejected
     ]);

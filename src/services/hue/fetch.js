@@ -12,8 +12,7 @@ const fetch = (...args) => {
     .then(result => {
       // Handle Hue errors
       if (result instanceof Array) {
-        // Not actually an array?
-        for (let item of [...result]) {
+        for (let item of result) {
           if (item.error) {
             let error = new Error();
             Object.assign(error, item.error);

@@ -4,8 +4,8 @@ import Hue, {NUPNP_ADDRESS} from "services/hue";
 describe("Bridge Listing", () => {
   const bridgeList = [
     {
-      "id":"0",
-      "internalipaddress":"0.0.0.0"
+      "id": "0",
+      "internalipaddress": "0.0.0.0"
     }
   ];
 
