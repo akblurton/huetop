@@ -1,6 +1,7 @@
 export const NUPNP_ADDRESS = "https://www.meethue.com/api/nupnp";
+export * from "./errors";
 
-import fetch from "../fetch";
+import fetch from "./fetch";
 
 class Hue {
   static _bridges = null;
