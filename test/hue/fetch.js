@@ -1,0 +1,30 @@
+import FetchMock from "fetch-mock";
+import fetch from "services/hue/fetch";
+
+import { UNAUTHORIZED_USER } from "services/hue";
+
+describe("Hue fetch", () => {
+  it("should handle HTTP status codes", () => {
+    FetchMock.mock("test1", 200);
+    FetchMock.mock("test2", 500);
+    FetchMock.mock("test3", 400);
+
+    return Promise.all([
+      fetch("test1").should.be.fufilled,
+      fetch("test2").should.be.rejected,
+      fetch("test3").should.be.rejected
+    ]);
+  });
+
+  it("should handle Hue API error responses", () => {
+    FetchMock.mock("/api/", [{
+      "error": {
+        "type": UNAUTHORIZED_USER,
+        "address": "</resource/parameteraddress>",
+        "description": "<description>"
+      }
+    }]);
+
+    return fetch("/api/").should.be.rejected;
+  });
+});

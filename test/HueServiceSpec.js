@@ -10,5 +10,6 @@ beforeEach(() => {
 });
 
 describe("Hue Service", () => {
+  require("./hue/fetch");
   require("./hue/bridges");
 });

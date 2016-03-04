@@ -8,7 +8,21 @@ const fetch = (...args) => {
       }
       return response;
     })
-    .then(response => response.json());
+    .then(response => response.json())
+    .then(result => {
+      // Handle Hue errors
+      if (result instanceof Array) {
+        // Not actually an array?
+        for (let item of [...result]) {
+          if (item.error) {
+            let error = new Error();
+            Object.assign(error, item.error);
+            throw error;
+          }
+        }
+      }
+      return result;
+    });
 };
 
 export default fetch;
