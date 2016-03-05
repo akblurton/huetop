@@ -35,17 +35,6 @@ class Hue {
   static _bridges = null;
 
   /**
-   * IP address of this bridge
-   * @type {String}
-   */
-  ip = null;
-  /**
-   * Username to use for api calls
-   * @type {[type]}
-   */
-  username = null;
-
-  /**
    * Reset bridge list cache
    */
   static reset() {

@@ -9,7 +9,18 @@ import fetch from "./fetch";
 /** Represents a Hue bridge */
 class Bridge {
   /**
-   * Created a connected bridge instance
+   * IP address of this bridge
+   * @type {String}
+   */
+  ip = null;
+  /**
+   * Username to use for api calls
+   * @type {[type]}
+   */
+  username = null;
+
+  /**
+   * Create a connected bridge instance
    * @param  {String} ip       IP address of bridge
    * @param  {String} username Username to use in API requests
    */
