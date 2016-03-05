@@ -1,6 +1,7 @@
 export * from "./errors";
 
 import fetch from "./fetch";
+import * as err from "./errors";
 
 export const NUPNP_ADDRESS = "https://www.meethue.com/api/nupnp";
 export const DEFAULT_CONNECTION_INTERVAL = 3000;
@@ -80,7 +81,10 @@ class Hue {
       const attempt = () => {
         Hue.connect(ip).then(resolve).catch(error => {
           attempts++;
-          if (attempts >= maxAttempts) {
+          if (
+            error.type !== err.LINK_BUTTON_NOT_PRESSED ||
+            attempts >= maxAttempts
+          ) {
             reject(error);
           } else {
             setTimeout(attempt, interval);

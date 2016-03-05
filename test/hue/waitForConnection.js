@@ -1,7 +1,8 @@
 import FetchMock from "fetch-mock";
 import Hue, {
   errorDescriptor,
-  LINK_BUTTON_NOT_PRESSED
+  LINK_BUTTON_NOT_PRESSED,
+  INTERNAL_ERROR
 } from "services/hue";
 
 
@@ -30,6 +31,16 @@ const mockError = () => {
   }]);
 };
 
+const mockFatalError = () => {
+  responses.push([{
+    "error": {
+      "type": INTERNAL_ERROR,
+      "address": "",
+      "description": errorDescriptor(INTERNAL_ERROR).summary
+    }
+  }]);
+};
+
 describe("Hue.waitForConnection", () => {
   beforeEach(() => {
     responses = [];
@@ -49,6 +60,12 @@ describe("Hue.waitForConnection", () => {
   it("should fail after maximum attempts", () => {
     mockError();
     mockError();
+    return Hue.waitForConnection("0.0.0.0", 2, 10).should.be.rejected;
+  });
+
+  it("should fail immediately when not receiving a link button error", () => {
+    mockFatalError();
+    mockSuccess();
     return Hue.waitForConnection("0.0.0.0", 2, 10).should.be.rejected;
   });
 });
