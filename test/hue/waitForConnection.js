@@ -2,7 +2,8 @@ import FetchMock from "fetch-mock";
 import Hue, {
   errorDescriptor,
   LINK_BUTTON_NOT_PRESSED,
-  INTERNAL_ERROR
+  INTERNAL_ERROR,
+  NUPNP_ADDRESS
 } from "services/hue";
 
 
@@ -52,9 +53,8 @@ describe("Hue.waitForConnection", () => {
   it("should return a hue instance after a failed connection", () => {
     mockError();
     mockSuccess();
-    let promise = Hue.waitForConnection("0.0.0.0", 3, 10)
+    return Hue.waitForConnection("0.0.0.0", 3, 10)
       .should.eventually.be.instanceof(Hue);
-    return promise;
   });
 
   it("should fail after maximum attempts", () => {
@@ -67,5 +67,17 @@ describe("Hue.waitForConnection", () => {
     mockFatalError();
     mockSuccess();
     return Hue.waitForConnection("0.0.0.0", 2, 10).should.be.rejected;
+  });
+
+  it("should connect using a bridge ID", () => {
+    FetchMock.mock(NUPNP_ADDRESS, [{
+      "id": "randomid",
+      "internalipaddress": "0.0.0.0"
+    }]);
+    mockError();
+    mockSuccess();
+
+    return Hue.waitForConnection("randomid", 2, 10)
+      .should.eventually.be.instanceof(Hue);
   });
 });
