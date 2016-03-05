@@ -1,3 +1,5 @@
+import uuid from "uuid";
+
 import fetch from "./fetch";
 import * as err from "./errors";
 
@@ -77,10 +79,11 @@ class Hue {
   static connect(ipOrId) {
     /** Helper to create the Hue instance */
     const createHue = ip => {
+      let id = uuid.v4().split("-").join("");
       return fetch(`http://${ip}/api`, {
         "method": "POST",
         "body": {
-          "devicetype": `${APP_NAME}#something`
+          "devicetype": `${APP_NAME}#${id}`
         }
       })
       .then(result => {

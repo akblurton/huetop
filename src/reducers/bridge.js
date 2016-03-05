@@ -1,9 +1,11 @@
 import { combineReducers } from "redux";
 import {
+  FETCH_BRIDGES,
   FOUND_BRIDGES,
-  SELECT_BRIDGE,
   CANNOT_FIND_BRIDGES,
-  FETCH_BRIDGES
+  CONNECT_TO_BRIDGE,
+  CONNECTED_TO_BRIDGE,
+  CONNECTION_FAILED
 } from "actions";
 
 function list(state = [], action) {
@@ -23,12 +25,8 @@ function list(state = [], action) {
 
 function current(state = null, action) {
   switch(action.type) {
-  case SELECT_BRIDGE: {
-    let { id, internalipaddress: ip } = action.hub;
-    return {
-      id,
-      ip
-    };
+  case CONNECTED_TO_BRIDGE: {
+    return action.bridge;
   }
   default:
     return state;
@@ -51,7 +49,10 @@ function error(state = null, action) {
   switch(action.type) {
   case CANNOT_FIND_BRIDGES:
     return action.error;
-  case SELECT_BRIDGE:
+  case CONNECTION_FAILED:
+    return action.error;
+  case CONNECT_TO_BRIDGE:
+  case CONNECTED_TO_BRIDGE:
   case FOUND_BRIDGES:
   case FETCH_BRIDGES:
     return null;
