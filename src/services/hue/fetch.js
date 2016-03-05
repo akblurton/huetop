@@ -1,5 +1,10 @@
-const fetch = (...args) => {
-  return global.fetch(...args)
+const fetch = (url, config = {}) => {
+  if ("body" in config && config.body instanceof Object) {
+    config = Object.assign({}, config, {
+      "body": JSON.stringify(config.body)
+    });
+  }
+  return global.fetch(url, config)
     .then(response => {
       if (!response.ok) {
         let error = new Error(response.statusText);

@@ -73,6 +73,7 @@
     "it": true,
     "expect": true,
     "assert": true,
-    "beforeEach": true
+    "beforeEach": true,
+    "afterEach": true
   }
 }
