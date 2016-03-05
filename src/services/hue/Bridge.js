@@ -31,6 +31,10 @@ class Bridge {
   api(endpoint, ...args) {
     return fetch(`http://${this.ip}/api/${this.username}/${endpoint}`, ...args);
   }
+
+  lights() {
+    return this.api("lights");
+  }
 }
 
 export default Bridge;

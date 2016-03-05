@@ -29,11 +29,12 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     "preprocessors": {
-      "test/**/*Spec.js": ["webpack"]
+      "test/**/*Spec.js": ["webpack", "sourcemap"]
     },
 
     "plugins": [
       require("karma-webpack"),
+      require("karma-sourcemap-loader"),
       require("karma-mocha"),
       require("karma-chai"),
       require("karma-chai-plugins"),
@@ -43,6 +44,7 @@ module.exports = function(config) {
     ],
 
     "webpack": {
+      "devtool" : "inline-source-map",
       "module": {
         "loaders": webpack.module.loaders
       },
