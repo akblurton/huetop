@@ -1,7 +1,7 @@
-export * from "./errors";
-
 import fetch from "./fetch";
 import * as err from "./errors";
+
+import Bridge, { IP_REGEX } from "./Bridge";
 
 /**
  * Official Hue NUPNP url to fetch connected bridges
@@ -14,27 +14,12 @@ export const NUPNP_ADDRESS = "https://www.meethue.com/api/nupnp";
  */
 export const DEFAULT_CONNECTION_INTERVAL = 3000;
 
-/**
- * Regular expression to check for valid IP address
- * @type {RegExp}
- */
-const IP_REGEX = /^\d{1,3}(\.\d{1,3}){3}$/;
+
 /**
  * Prefix to send to "devicetype" argument when connecting to a bridge
  * @type {String}
  */
 const APP_NAME = "HueTop";
-
-/**
- * Helper method to make api calls to a local bridge
- * @param  {Object}    hue      Hue instance or object containing IP address
- * @param  {String}    endpoint Endpoint to communicate to
- * @param  {Array}     ...args  remaining arguments
- * @return {Promise}
- */
-const api = (hue, endpoint, ...args) => (
-  fetch(`http://${hue.ip}/api${endpoint}`, ...args)
-);
 
 /**
  * Represents a connected bridge
@@ -92,7 +77,7 @@ class Hue {
   static connect(ipOrId) {
     /** Helper to create the Hue instance */
     const createHue = ip => {
-      return api({ip}, "", {
+      return fetch(`http://${ip}/api`, {
         "method": "POST",
         "body": {
           "devicetype": `${APP_NAME}#something`
@@ -102,7 +87,7 @@ class Hue {
         // Grab username from result payload
         result = result[0];
         let {username} = result.success;
-        return new Hue(ip, username);
+        return new Bridge(ip, username);
       })
       .catch(e => {
         // Throw any errors given to us
@@ -130,6 +115,13 @@ class Hue {
     });
   }
 
+  /**
+   * Attempt to connect to a bridge over time, wait for the link button
+   * @param  {String} ipOrId      IP address or ID of bridge to connect to
+   * @param  {Number} maxAttempts Maximum number of tries before failing
+   * @param  {Number} interval    Time (in MS) between attempts
+   * @return {Promise}            Resolves to Hue instance on success
+   */
   static waitForConnection(
     ipOrId,
     maxAttempts = 3,
@@ -157,15 +149,8 @@ class Hue {
       attempt();
     });
   }
-
-  constructor(ip, username) {
-    if (!IP_REGEX.test(ip)) {
-      throw Error("Invalid IP address provided");
-    }
-
-    this.ip = ip;
-    this.username = username;
-  }
 }
 
 export default Hue;
+export * from "./errors";
+export {Bridge};

@@ -1,5 +1,6 @@
 import FetchMock from "fetch-mock";
 import Hue, {
+  Bridge,
   errorDescriptor,
   NUPNP_ADDRESS,
   LINK_BUTTON_NOT_PRESSED
@@ -31,7 +32,7 @@ describe("Hue.connect", () => {
   ];
 
   it("should fetch a username", () => {
-    return Hue.connect("0.0.0.0").should.eventually.be.instanceof(Hue)
+    return Hue.connect("0.0.0.0").should.eventually.be.instanceof(Bridge)
       .then(hue => {
         const last = FetchMock.lastCall(API_ENDPOINT);
         expect(last[1].body).to.be.ok;
@@ -47,9 +48,9 @@ describe("Hue.connect", () => {
     FetchMock.mock(NUPNP_ADDRESS, bridgeList);
 
     return Promise.all([
-      Hue.connect("0.0.0.0").should.eventually.be.instanceof(Hue),
+      Hue.connect("0.0.0.0").should.eventually.be.instanceof(Bridge),
       Hue.connect("randomstring").should.be.rejected,
-      Hue.connect(KNOWN_ID).should.eventually.be.instanceof(Hue)
+      Hue.connect(KNOWN_ID).should.eventually.be.instanceof(Bridge)
     ]);
   });
 

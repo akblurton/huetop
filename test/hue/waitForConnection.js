@@ -1,5 +1,6 @@
 import FetchMock from "fetch-mock";
 import Hue, {
+  Bridge,
   errorDescriptor,
   LINK_BUTTON_NOT_PRESSED,
   INTERNAL_ERROR,
@@ -54,7 +55,7 @@ describe("Hue.waitForConnection", () => {
     mockError();
     mockSuccess();
     return Hue.waitForConnection("0.0.0.0", 3, 10)
-      .should.eventually.be.instanceof(Hue);
+      .should.eventually.be.instanceof(Bridge);
   });
 
   it("should fail after maximum attempts", () => {
@@ -78,6 +79,6 @@ describe("Hue.waitForConnection", () => {
     mockSuccess();
 
     return Hue.waitForConnection("randomid", 2, 10)
-      .should.eventually.be.instanceof(Hue);
+      .should.eventually.be.instanceof(Bridge);
   });
 });
