@@ -25,15 +25,14 @@ export function fetchBridges() {
 
 export const FIND_BRIDGES = "FIND_BRIDGES";
 export function findBridges() {
-  return dispatch => {
+  return async function(dispatch) {
     dispatch(fetchBridges());
-    Hue.bridges()
-    .then(result => {
-      dispatch(foundBridges(result));
-    })
-    .catch(error => {
+    try {
+      let bridges = await Hue.bridges();
+      dispatch(foundBridges(bridges));
+    } catch (error) {
       dispatch(cannotFindBridges(error));
-    });
+    }
   };
 }
 
@@ -69,14 +68,13 @@ export function waitForLinkButton() {
 
 export const CONNECT_TO_BRIDGE = "CONNECT_TO_BRIDGE";
 export function connectToBridge(ipOrId) {
-  return (dispatch) => {
+  return async function(dispatch) {
     dispatch(connectingToBridge());
-
-    Hue.waitForConnection(ipOrId).then(bridge => {
+    try {
+      let bridge = await Hue.waitForConnection(ipOrId);
       dispatch(connectedToBridge(bridge));
-    })
-    .catch(e => {
+    } catch (e) {
       dispatch(connectionFailed(e));
-    });
+    }
   };
 }
