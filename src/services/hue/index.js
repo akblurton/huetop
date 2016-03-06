@@ -45,19 +45,18 @@ class Hue {
    * Retrieve a list of bridges from the UNPNP endpoint
    * @return {Promise}
    */
-  static bridges() {
+  static async bridges() {
     // Return cached list if available
     if (Hue._bridges !== null) {
-      return Promise.resolve(Hue._bridges);
+      return Hue._bridges;
     }
 
-    // Otherwise fire off a fetch request
-    return fetch(NUPNP_ADDRESS)
-      .then(result => {
-        // Assign cache as we return the result
-        return Hue._bridges = result;
-      })
-      .catch(() => []);
+    try {
+      let result = await fetch(NUPNP_ADDRESS);
+      return Hue._bridges = result;
+    } catch (e) {
+      return [];
+    }
   }
 
   /**
@@ -65,46 +64,37 @@ class Hue {
    * @param  {String} ipOrId IP address or ID of bridge to connect to
    * @return {Promise} Resolves to a Hue instance on success
    */
-  static connect(ipOrId) {
+  static async connect(ipOrId) {
     /** Helper to create the Hue instance */
-    const createHue = ip => {
+    const createHue = async function(ip) {
       let id = uuid.v4().split("-").join("");
-      return fetch(`http://${ip}/api`, {
+      let result = await fetch(`http://${ip}/api`, {
         "method": "POST",
         "body": {
           "devicetype": `${APP_NAME}#${id}`
         }
-      })
-      .then(result => {
-        // Grab username from result payload
-        result = result[0];
-        let {username} = result.success;
-        return new Bridge(ip, username);
-      })
-      .catch(e => {
-        // Throw any errors given to us
-        throw e;
       });
+      // Grab username from result payload
+      result = result[0];
+      let {username} = result.success;
+      return new Bridge(ip, username);
     };
 
-    return new Promise((resolve, reject) => {
-      // Potentially given an ID
-      if (!IP_REGEX.test(ipOrId)) {
-        // Load up known bridges and then searcj for given ID
-        Hue.bridges().then(results => {
-          let bridge = results.find(bridge => bridge.id === ipOrId);
-          if (bridge) {
-            // Create a hue instance using this hub's ip address
-            resolve(createHue(bridge.internalipaddress));
-          } else {
-            throw Error("Invalid IP address/ID provided");
-          }
-        }).catch(reject);
+    // Potentially given an ID
+    if (!IP_REGEX.test(ipOrId)) {
+      // Load up known bridges and then searcj for given ID
+      let results = await Hue.bridges();
+      let bridge = results.find(bridge => bridge.id === ipOrId);
+      if (bridge) {
+        // Create a hue instance using this hub's ip address
+        return createHue(bridge.internalipaddress);
       } else {
-        // Immediately try to connect when given an IP address
-        resolve(createHue(ipOrId));
+        throw Error("Invalid IP address/ID provided");
       }
-    });
+    } else {
+      // Immediately try to connect when given an IP address
+      return createHue(ipOrId);
+    }
   }
 
   /**
@@ -114,32 +104,30 @@ class Hue {
    * @param  {Number} interval    Time (in MS) between attempts
    * @return {Promise}            Resolves to Hue instance on success
    */
-  static waitForConnection(
+  static async waitForConnection(
     ipOrId,
     maxAttempts = 3,
     interval = DEFAULT_CONNECTION_INTERVAL
   ) {
-    let attempts = 0;
-    return new Promise((resolve, reject) => {
-      const attempt = () => {
-        // Attempt connection to given ip or ID, instantly resolve on success
-        Hue.connect(ipOrId).then(resolve).catch(error => {
-          // On failure, increment our attempts and check if we have
-          // exceeded them, or are receiving an unknown error
-          attempts++;
-          if (
-            error.type !== err.LINK_BUTTON_NOT_PRESSED ||
-            attempts >= maxAttempts
-          ) {
-            reject(error);
-          } else {
-            // Re-try after given interval
-            setTimeout(attempt, interval);
-          }
-        });
-      };
-      attempt();
-    });
+    const sleep = (ms = 0) => {
+      return new Promise(r => setTimeout(r, ms));
+    };
+
+    for (let i = 1; i <= maxAttempts; i++) {
+      try {
+        return await Hue.connect(ipOrId);
+      } catch (error) {
+        if (
+          error.type !== err.LINK_BUTTON_NOT_PRESSED ||
+          i >= maxAttempts
+        ) {
+          throw error;
+        } else {
+          // Re-try after given interval
+          await sleep(interval);
+        }
+      }
+    }
   }
 }
 
