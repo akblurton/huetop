@@ -1,4 +1,5 @@
 import uuid from "uuid";
+import sleep from "util/sleep";
 
 import fetch from "./fetch";
 import * as err from "./errors";
@@ -66,7 +67,7 @@ class Hue {
    */
   static async connect(ipOrId) {
     /** Helper to create the Hue instance */
-    const createHue = async function(ip) {
+    const createHue = async ip => {
       let id = uuid.v4().split("-").join("");
       let result = await fetch(`http://${ip}/api`, {
         "method": "POST",
@@ -82,7 +83,7 @@ class Hue {
 
     // Potentially given an ID
     if (!IP_REGEX.test(ipOrId)) {
-      // Load up known bridges and then searcj for given ID
+      // Load up known bridges and then search for given ID
       let results = await Hue.bridges();
       let bridge = results.find(bridge => bridge.id === ipOrId);
       if (bridge) {
@@ -109,10 +110,6 @@ class Hue {
     maxAttempts = 3,
     interval = DEFAULT_CONNECTION_INTERVAL
   ) {
-    const sleep = (ms = 0) => {
-      return new Promise(r => setTimeout(r, ms));
-    };
-
     for (let i = 1; i <= maxAttempts; i++) {
       try {
         return await Hue.connect(ipOrId);
