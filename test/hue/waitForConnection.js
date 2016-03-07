@@ -1,9 +1,7 @@
 import FetchMock from "fetch-mock";
 import Hue, {
   Bridge,
-  errorDescriptor,
-  LINK_BUTTON_NOT_PRESSED,
-  INTERNAL_ERROR,
+  ErrorTypes,
   NUPNP_ADDRESS
 } from "services/hue";
 
@@ -26,9 +24,11 @@ const mockSuccess = () => {
 const mockError = () => {
   responses.push([{
     "error": {
-      "type": LINK_BUTTON_NOT_PRESSED,
+      "type": ErrorTypes.LINK_BUTTON_NOT_PRESSED,
       "address": "",
-      "description": errorDescriptor(LINK_BUTTON_NOT_PRESSED).summary
+      "description": ErrorTypes.describe(
+        ErrorTypes.LINK_BUTTON_NOT_PRESSED
+      ).summary
     }
   }]);
 };
@@ -36,9 +36,11 @@ const mockError = () => {
 const mockFatalError = () => {
   responses.push([{
     "error": {
-      "type": INTERNAL_ERROR,
+      "type": ErrorTypes.INTERNAL_ERROR,
       "address": "",
-      "description": errorDescriptor(INTERNAL_ERROR).summary
+      "description": ErrorTypes.describe(
+        ErrorTypes.INTERNAL_ERROR
+      ).summary
     }
   }]);
 };

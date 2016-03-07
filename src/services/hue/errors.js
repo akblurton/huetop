@@ -46,7 +46,7 @@ export const INVALID_STATE = 803;
  * @param  {Number} code Error code
  * @return {Object} Summary, Description (and optional note) for error type
  */
-export const errorDescriptor = code => ({
+export const describe = code => ({
   [UNAUTHORIZED_USER]: {
     "summary": "unauthorized user,",
     "description": "This will be returned if an invalid username is used in the request, or if the username does not have the rights to modify the resource."

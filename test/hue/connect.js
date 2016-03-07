@@ -1,9 +1,8 @@
 import FetchMock from "fetch-mock";
 import Hue, {
   Bridge,
-  errorDescriptor,
-  NUPNP_ADDRESS,
-  LINK_BUTTON_NOT_PRESSED
+  ErrorTypes,
+  NUPNP_ADDRESS
 } from "services/hue";
 
 
@@ -58,14 +57,16 @@ describe("Hue.connect", () => {
     FetchMock.restore();
     FetchMock.mock(API_ENDPOINT, "POST", [{
       "error": {
-        "type": LINK_BUTTON_NOT_PRESSED,
+        "type": ErrorTypes.LINK_BUTTON_NOT_PRESSED,
         "address": "",
-        "description": errorDescriptor(LINK_BUTTON_NOT_PRESSED).summary
+        "description": ErrorTypes.describe(
+          ErrorTypes.LINK_BUTTON_NOT_PRESSED
+        ).summary
       }
     }]);
 
     return Hue.connect("0.0.0.0").should.be.rejected.then(e => {
-      expect(e.type).to.be.equal(LINK_BUTTON_NOT_PRESSED);
+      expect(e.type).to.be.equal(ErrorTypes.LINK_BUTTON_NOT_PRESSED);
     });
   });
 });

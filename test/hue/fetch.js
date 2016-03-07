@@ -1,7 +1,7 @@
 import FetchMock from "fetch-mock";
 import fetch from "services/hue/fetch";
 
-import { UNAUTHORIZED_USER } from "services/hue";
+import { ErrorTypes } from "services/hue";
 
 describe("Hue fetch", () => {
   it("should handle HTTP status codes", () => {
@@ -19,7 +19,7 @@ describe("Hue fetch", () => {
   it("should handle Hue API error responses", () => {
     FetchMock.mock("/api/", [{
       "error": {
-        "type": UNAUTHORIZED_USER,
+        "type": ErrorTypes.UNAUTHORIZED_USER,
         "address": "</resource/parameteraddress>",
         "description": "<description>"
       }

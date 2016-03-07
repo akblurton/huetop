@@ -2,8 +2,7 @@ import uuid from "uuid";
 import sleep from "util/sleep";
 
 import fetch from "./fetch";
-import * as err from "./errors";
-
+import * as ErrorTypes from "./errors";
 import Bridge, { IP_REGEX } from "./Bridge";
 
 /**
@@ -115,7 +114,7 @@ class Hue {
         return await Hue.connect(ipOrId);
       } catch (error) {
         if (
-          error.type !== err.LINK_BUTTON_NOT_PRESSED ||
+          error.type !== ErrorTypes.LINK_BUTTON_NOT_PRESSED ||
           i >= maxAttempts
         ) {
           throw error;
@@ -129,5 +128,6 @@ class Hue {
 }
 
 export default Hue;
-export * from "./errors";
+
 export {Bridge};
+export {ErrorTypes};
