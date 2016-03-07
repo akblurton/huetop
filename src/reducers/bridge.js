@@ -11,13 +11,7 @@ import {
 function list(state = [], action) {
   switch(action.type) {
   case FOUND_BRIDGES:
-    return action.list.map(hub => {
-      let { id, internalipaddress: ip } = hub;
-      return {
-        id,
-        ip
-      };
-    });
+    return [...action.list];
   default:
     return state;
   }
