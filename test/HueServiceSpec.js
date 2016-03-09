@@ -14,6 +14,7 @@ describe("Hue Service", () => {
   require("./hue/fetch");
   require("./hue/bridges");
   require("./hue/connect");
+  require("./hue/restore");
   require("./hue/waitForConnection");
   require("./hue/bridge");
 });

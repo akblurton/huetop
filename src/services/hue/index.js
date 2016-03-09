@@ -125,6 +125,12 @@ class Hue {
       }
     }
   }
+
+  static async restore(ip, username) {
+    await fetch(`http://${ip}/api/${username}`);
+    return new Bridge(ip, username);
+  }
+
 }
 
 export default Hue;
