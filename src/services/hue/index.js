@@ -135,6 +135,12 @@ class Hue {
     }
   }
 
+  /**
+   * Attempt to restore a bridge connection with a given username & ip
+   * @param  {string} ip       IP Address of bridge to connect to
+   * @param  {string} username Username to authenticate with
+   * @return {Promise}         Resolves to instance of Bridge on success
+   */
   static async restore(ip, username) {
     await fetch(`http://${ip}/api/${username}`);
     return new Bridge(ip, username);
