@@ -5,6 +5,8 @@ import Hue, {
   NUPNP_ADDRESS
 } from "services/hue";
 
+import store from "store";
+
 
 const EXAMPLE_USER = "exampleusername";
 const API_ENDPOINT = "http://0.0.0.0/api";
@@ -32,15 +34,35 @@ describe("Hue.connect", () => {
 
   it("should fetch a username", () => {
     return Hue.connect("0.0.0.0").should.eventually.be.instanceof(Bridge)
-      .then(hue => {
+      .then(bridge => {
         const last = FetchMock.lastCall(API_ENDPOINT);
         expect(last[1].body).to.be.ok;
         expect(JSON.parse(last[1].body)).to.include.keys([
           "devicetype"
         ]);
-        expect(hue.error).to.not.be.ok;
-        expect(hue.username).to.be.equal(EXAMPLE_USER);
+        expect(bridge.error).to.not.be.ok;
+        expect(bridge.username).to.be.equal(EXAMPLE_USER);
       });
+  });
+
+  it("should generate a devicetype", () => {
+    return Hue.connect("0.0.0.0").then(() => {
+      const last = FetchMock.lastCall(API_ENDPOINT)[1];
+      const body = JSON.parse(last.body);
+      expect(body.devicetype).to.match(/^HueTop\#[a-f0-9]+$/);
+    });
+  });
+
+  it("should reuse a devicetype from localstorage", () => {
+    return Promise.all([
+      Hue.connect("0.0.0.0"),
+      Hue.connect("0.0.0.0")
+    ]).then(() => {
+      const calls = FetchMock.calls(API_ENDPOINT);
+      const body = JSON.parse(calls[0][1].body);
+      const body2 = JSON.parse(calls[1][1].body);
+      expect(body.devicetype).to.equal(body2.devicetype);
+    });
   });
 
   it("should only allow IPs or known IDs", () => {

@@ -1,4 +1,5 @@
 import uuid from "uuid";
+import store from "store";
 import sleep from "util/sleep";
 
 import fetch from "./fetch";
@@ -42,6 +43,12 @@ class Hue {
   }
 
   /**
+   * Key to store devicetype (for retrieving usernames) for re-use
+   * @type {String}
+   */
+  static DEVICE_TYPE_KEY = "__huetop_service_device_key";
+
+  /**
    * Retrieve a list of bridges from the UNPNP endpoint
    * @return {Promise}
    */
@@ -67,7 +74,9 @@ class Hue {
   static async connect(ipOrId) {
     /** Helper to create the Hue instance */
     const createHue = async ip => {
-      let id = uuid.v4().split("-").join("");
+      // Create ID or retrieve it, then store in localStorage
+      let id = store.get(Hue.DEVICE_TYPE_KEY) || uuid.v4().split("-").join("");
+      store.set(Hue.DEVICE_TYPE_KEY, id);
       let result = await fetch(`http://${ip}/api`, {
         "method": "POST",
         "body": {
