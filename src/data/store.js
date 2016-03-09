@@ -7,4 +7,3 @@ export default createStore(
   reducer,
   applyMiddleware(thunk, createLogger())
 );
-
