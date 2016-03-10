@@ -42,5 +42,4 @@ describe("Bridge Listing", () => {
       expect(FetchMock.calls(NUPNP_ADDRESS).length).to.be.equal(2);
     });
   });
-
 });

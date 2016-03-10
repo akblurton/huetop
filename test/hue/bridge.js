@@ -1,4 +1,4 @@
-import { Bridge } from "services/hue";
+import { Bridge, bridge as makeBridge } from "services/hue";
 import FetchMock from "fetch-mock";
 
 import {
@@ -26,5 +26,13 @@ describe("Bridge Class", () => {
     return bridge.lights().should.eventually.be.eql(LIGHTS).then(() => {
       expect(FetchMock.calls(url).length).to.be.equal(1);
     });
+  });
+
+  it("should be initializable via json", () => {
+    const url = `http://${IP}/api/${TEST_USER}/lights`;
+    FetchMock.mock(url, "GET", LIGHTS);
+    return makeBridge({ip:IP, username:TEST_USER})
+            .lights()
+            .should.eventually.eql(LIGHTS);
   });
 });
