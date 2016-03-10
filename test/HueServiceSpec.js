@@ -10,6 +10,7 @@ afterEach(() => {
   store.clear();
   FetchMock.restore();
   Hue.reset();
+  Hue.jsonOnly(false);
 });
 
 describe("Hue Service", () => {

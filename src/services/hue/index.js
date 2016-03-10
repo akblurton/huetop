@@ -2,6 +2,7 @@ import uuid from "uuid";
 import store from "store";
 import sleep from "util/sleep";
 
+import returnAsJson from "./response";
 import fetch from "./fetch";
 import * as ErrorTypes from "./errors";
 import Bridge, { IP_REGEX } from "./Bridge";
@@ -86,6 +87,10 @@ class Hue {
       // Grab username from result payload
       result = result[0];
       let {username} = result.success;
+
+      if (returnAsJson()) {
+        return {ip, username};
+      }
       return new Bridge(ip, username);
     };
 
@@ -146,9 +151,20 @@ class Hue {
     return new Bridge(ip, username);
   }
 
+  /**
+   * Set how responses should be handled
+   * @param  {Boolean} state [description]
+   * @return {[type]}        [description]
+   */
+  static jsonOnly(state = false) {
+    return returnAsJson(state);
+  }
+
 }
 
 export default Hue;
 
 export {Bridge};
 export {ErrorTypes};
+
+export const bridge = config => new Bridge(config.ip, config.username);

@@ -91,4 +91,12 @@ describe("Hue.connect", () => {
       expect(e.type).to.be.equal(ErrorTypes.LINK_BUTTON_NOT_PRESSED);
     });
   });
+
+  it("should allow returning of JSON only", () => {
+    Hue.jsonOnly(true);
+    return Hue.connect("0.0.0.0").should.eventually.eql({
+      "ip": "0.0.0.0",
+      "username": EXAMPLE_USER
+    });
+  });
 });
