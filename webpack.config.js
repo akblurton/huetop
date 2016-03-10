@@ -6,6 +6,7 @@ module.exports = function(env) {
     "entry": [
       "webpack-dev-server/client?http://0.0.0.0:8000",
       "webpack/hot/only-dev-server",
+      "es5-shim",
       "babel-polyfill",
       "./src/index.js"
     ],
